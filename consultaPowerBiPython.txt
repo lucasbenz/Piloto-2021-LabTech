@@ -14,6 +14,10 @@ def hashingData2 (dfOrigin, colName): #recebe o dataframe e a lista com nome de 
         df.drop(c,axis=1,inplace=True)
     return df
 
+nomeColunas=[]
+for x in dataset.columns:
+    nomeColunas.append(x)
+
 #para adicionar uma nova coluna ao Select deve-se inserir o nome dela no arquivo txt
 col=open('"&Text.From(PastaPiloto)&"'colunas2.txt','r')
 lines=col.readlines()
