@@ -1,0 +1,44 @@
+# 'dataset' tem os dados de entrada para este script
+
+import pandas as pd
+from datetime import datetime
+import hashlib as hs
+
+def hashingData2 (dfOrigin, colName): #recebe o dataframe e a lista com nome de colunas que contém em seu título CPF, Nome ou RG
+    df=dfOrigin
+    for c in colName:
+        nomecoluna_hs = c +'_hs'
+        df[c] = df[c].astype(str)
+        #Apply hashing function to the column
+        df[nomecoluna_hs] = df[c].apply(lambda x: hs.sha256(x.encode()).hexdigest())
+        df.drop(c,axis=1,inplace=True)
+    return df
+
+#para adicionar uma nova coluna ao Select deve-se inserir o nome dela no arquivo txt
+col=open('"&Text.From(PastaPiloto)&"'colunas2.txt','r')
+lines=col.readlines()
+colu = []
+for x in lines:
+    colu.append(x.split(","))
+col.close() 
+colunasUsadas=colu[0]
+
+colunasAnonimizaveis = []
+for namecol in colunasUsadas:
+    if (namecol.find('CPF')!= -1 or 
+    (namecol.find('NOME') != -1 and namecol.find('MUN') == -1 ) or
+    namecol.find('RG_')!=-1 ):
+        colunasAnonimizaveis.append(namecol)  
+
+dfColunas = pd.DataFrame({'NomeColunaDisponível':nomeColunas}) #adiciona o nome de todas as colunas disponíveis em um df
+dfColunas['ColunasUteis']= dfColunas.apply(lambda x: x['NomeColunaDisponível'] in colunasUsadas, axis=1) #adiciona "1" se coluna será utilizada e "0" se não for
+
+stringSelect =''
+for x in dfColunas.loc[(dfColunas['ColunasUteis']==True)]['NomeColunaDisponível']:
+    stringSelect = stringSelect + str(x) +', '
+dfBase = dataset[[stringSelect]]
+
+dfAnonimo = dfBase
+dfAnonimo = hashingData2(dfAnonimo,colunasAnonimizaveis) #anonimiza dados
+
+dataset = dfAnonimo

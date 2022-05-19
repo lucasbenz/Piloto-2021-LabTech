@@ -1,0 +1,19 @@
+conda create --name envpowerbi python=3.7.7
+y
+conda activbate envpowerbi
+pip install jupyter
+pip install pandas
+pip install numpy
+pip install matplotlib
+
+"Para esse erro:
+requests.exceptions.SSLError: HTTPSConnectionPool(host='msft.com', 
+port=443): Max retries exceeded with url: / (Caused by SSLError("Can't 
+connect to HTTPS URL because the SSL module is not available."))"
+
+Just copy this file
+libcrypto-1_1-x64.*
+libssl-1_1-x64.*
+which will be located at C:\Anaconda3\Library\bin
+
+and paste these file to this location. C:\Anaconda3\DLLs.
